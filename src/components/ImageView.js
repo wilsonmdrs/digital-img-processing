@@ -1,17 +1,16 @@
 import React, { useState } from 'react'
-import { Button, Input, Label } from "reactstrap"
+import { Input, Label } from "reactstrap"
 import Canvas from './Canvas'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Histogram from '../components/Histogram'
 
 const ImageView = (props) => {
 
+    // variable to set the view
     const [view, setView] = useState({ image: true, histogram: false })
 
-    // Variable to store the Image Component
-
     /**
-     * This Method receive a event Object on the current mouse position
+     * This Method receive an event Object on the current mouse position
      * to get the Image Color (RGB) 
      * @param {Object} event
      */
@@ -23,26 +22,33 @@ const ImageView = (props) => {
         // Getting the Element (Canvas) Context
         const context = event.target.getContext('2d')
         // Getting The Image Data from Mouse Position
-        const imagePositionData = context.getImageData(x, y, 1, 1).data
+        const imagePositionPixel = context.getImageData(x, y, 1, 1).data
         // Transposing the Color From RGB to Hexadecimal
-        const hexadecimal = "#" + ("000000" + rgbToHex(imagePositionData[0], imagePositionData[1], imagePositionData[2])).slice(-6);
+        const hexadecimal = rgbToHex(imagePositionPixel[0], imagePositionPixel[1], imagePositionPixel[2])
         // Setting the Red, Green and Blue values for State Variable
-        props.onSetColor(imagePositionData[0], imagePositionData[1], imagePositionData[2], hexadecimal)
-
-        // var original = document.getElementById("original").getContext('2d')
-        // // console.log(event.clientX)
-        // zoom(event.target, original, x,y)
-
+        props.onSetColor(imagePositionPixel[0], imagePositionPixel[1], imagePositionPixel[2], hexadecimal)
     }
 
+    /**
+     * This Method receive de Red, Green and Blue valor from a pixel and return a hexadecimal value
+     * @param {Number} r 
+     * @param {Number} g 
+     * @param {Number} b 
+     * @returns 
+     */
     const rgbToHex = (r, g, b) => {
         try {
-            return ((r << 16) | (g << 8) | b).toString(16);
+            let hexadecimal = "#" + ("000000" + ((r << 16) | (g << 8) | b).toString(16)).slice(-6)
+            return hexadecimal
         } catch (error) {
             alert("Invalid color component")
         }
     }
 
+    /**
+     * This Method receive an image address and make an Object url
+     * @param {Object} event
+     */
     const fileSelectedHandler = (e) => {
         if (!!e.target.files[0]) {
             const url_image = URL.createObjectURL(e.target.files[0])
@@ -51,16 +57,20 @@ const ImageView = (props) => {
         }
     }
 
-    const zoom = (canvas, ctx, x, y) => {
-        ctx.drawImage(canvas,
-            Math.min(Math.max(0, x - 5), canvas.width - 10),
-            Math.min(Math.max(0, y - 5), canvas.height - 10),
-            10, 10,
-            0, 0,
-            100, 100);
+    // const zoom = (canvas, ctx, x, y) => {
+    //     ctx.drawImage(canvas,
+    //         Math.min(Math.max(0, x - 5), canvas.width - 10),
+    //         Math.min(Math.max(0, y - 5), canvas.height - 10),
+    //         10, 10,
+    //         0, 0,
+    //         100, 100);
 
-    }
+    // }
 
+    /**
+     * This method change the view
+     * @param {Object} event 
+     */
     const onSetView = (e) => {
         e.preventDefault()
         if (!!props.urlImage ||  !!props.resultImage) {
@@ -68,23 +78,38 @@ const ImageView = (props) => {
         }
     }
 
+    /**
+     * This Method save the image how a .png file
+     */
     const saveImageHandler = () => {
         if (!!props.resultImage) {
             const canvas = document.getElementById("result")
-            console.log(canvas)
-            var img = canvas.toDataURL("image/png");
-            var downloadLink = document.createElement('a');
-            downloadLink.href = img;
-            downloadLink.download = 'result.png';
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-
+            var img = canvas.toDataURL("image/png")
+            var downloadLink = document.createElement('a')
+            downloadLink.href = img
+            downloadLink.download = 'result.png'
+            document.body.appendChild(downloadLink)
+            downloadLink.click()
+            document.body.removeChild(downloadLink)
         }
-
     }
 
-
+    const onSetFullScreen = (e) => {
+        e.preventDefault()
+        if (!!props.urlImage ||  !!props.resultImage) {
+            let full = {first:true, second:true, result:true, all:false}
+            if (props.firstImage) {full = {first:true, second:false, result:false, all:false}}
+            if (props.secondImage) {full = {first:false, second:true, result:false, all:false}}
+            if (props.result) {full = {first:false, second:false, result:true, all:false}}
+            props.onSetFullScreen(full)
+        }
+    }
+    const onDisableFullScreen = (e) => {
+        e.preventDefault()
+        if (!!props.urlImage ||  !!props.resultImage) {
+            props.onSetFullScreen({first:true, second:true, result:true, all:true})
+        }
+    }
 
     return (
         <div id="image-view">
@@ -101,8 +126,11 @@ const ImageView = (props) => {
                         </>
                     )}
                     <FontAwesomeIcon className="icon" icon="chart-bar" onClick={(e) => onSetView(e)} />
-
-
+                    {props.fullScreen ? (
+                        <FontAwesomeIcon className="icon" icon="expand-arrows-alt" onClick={(e) => onSetFullScreen(e)} />
+                    ): (
+                        <FontAwesomeIcon className="icon" icon="compress-arrows-alt" onClick={(e) => onDisableFullScreen(e)} />
+                    )}
                 </Label>
             </div>
             {/* <div className="pixel-zoom">

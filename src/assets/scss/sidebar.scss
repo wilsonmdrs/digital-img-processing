@@ -1,13 +1,14 @@
-
-
 @import "fonts";
 @import "variables";
 
-$sidebar-bg-color:$primary-color;
+$sidebar-bg-color: $primary-color;
 $sidebar-color: #fff !default;
 $sidebar-width: 270px !default;
 $sidebar-collapsed-width: 80px !default;
-$highlight-color: lighten($color:#000, $amount:40) !default;
+$highlight-color: lighten(
+    $color: #000,
+    $amount: 40,
+) !default;
 $submenu-bg-color: transparent !default;
 $submenu-bg-color-collapsed: transparent !default;
 $icon-bg-color: transparent !default;
@@ -18,22 +19,19 @@ $breakpoint-md: 768px !default;
 $breakpoint-lg: 992px !default;
 $breakpoint-xl: 1200px !default;
 
-#sidebar{
+#sidebar {
     display: flex;
     flex-basis: auto;
-    img{
-
+    img {
         filter: blur(4px);
     }
-    
-  
-    .sidebar-header{
+    .sidebar-header {
         display: flex;
         justify-content: center;
         align-items: center;
         color: white;
-        
-        .icon{
+
+        .icon {
             display: flex;
             flex-basis: 20%;
             margin: 0;
@@ -42,7 +40,7 @@ $breakpoint-xl: 1200px !default;
             padding-left: 5px;
         }
 
-        .title{
+        .title {
             display: flex;
             flex-basis: 90%;
             margin: 0;
@@ -53,25 +51,25 @@ $breakpoint-xl: 1200px !default;
     }
 
     //component
-    .header{
+    .header {
         display: flex;
         flex-basis: 100%;
         justify-content: center;
         align-content: center;
         min-height: 50px;
-        .logo{
+        .logo {
             display: flex;
             flex-basis: 80%;
             flex-direction: column;
 
-            .title{
+            .title {
                 font-family: "Bad Script";
                 font-size: 22px;
                 color: lighten($color: #43b99c, $amount: 0);
                 margin: 0;
                 padding-left: 10px;
             }
-            .subtitle{
+            .subtitle {
                 padding-left: 30px;
                 font-family: "Open Sans";
                 font-size: 09px;
@@ -79,13 +77,13 @@ $breakpoint-xl: 1200px !default;
                 margin: 0;
             }
         }
-        
-        .icon{
+
+        .icon {
             display: flex;
             flex-basis: 20%;
             justify-content: center;
             align-content: center;
-            svg{
+            svg {
                 align-self: center;
                 font-size: 30px;
                 color: #fff;
@@ -94,47 +92,48 @@ $breakpoint-xl: 1200px !default;
         }
     }
 
-    .pro-sidebar-content{
+    .pro-sidebar-content {
         color: #fff;
 
-        .range{
+        .range {
             display: flex;
             flex-basis: auto;
             justify-content: center;
             align-items: center;
-            padding: 3px 0 ;
-            .label, .number{
+            padding: 3px 0;
+            .label,
+            .number {
                 display: flex;
                 flex-basis: 30%;
                 margin: 0;
                 padding: 0 5px;
             }
-            input{
+            input {
                 text-align: center;
                 width: 30%;
                 padding: 0 2px;
             }
-            .number{
+            .number {
                 font-size: 18px;
                 width: auto;
             }
-            .limiar{
+            .limiar {
                 justify-content: center;
                 align-items: center;
                 width: 100%;
             }
         }
-        .title{
+        .title {
             display: flex;
             flex-basis: auto;
             justify-content: center;
             align-items: center;
-            p{
+            p {
                 margin: 0;
             }
         }
 
-        .btn{
+        .btn {
             display: flex;
             flex-basis: 100%;
             justify-content: center;
@@ -148,27 +147,26 @@ $breakpoint-xl: 1200px !default;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            .title{
+            .title {
                 display: flex;
                 flex-basis: auto;
                 justify-content: center;
                 align-items: center;
                 background-color: rgba(0, 0, 0, 0.3);
-                margin: 0 20px 10px 0 ;
+                margin: 0 20px 10px 0;
                 width: 100%;
-                p{
+                p {
                     margin: 0;
                     font-size: 16px;
-
                 }
             }
-            .btn-filter{
+            .btn-filter {
                 display: flex;
                 width: 100%;
                 justify-content: center;
                 align-items: center;
                 margin: 0 20px 0 0;
-                
+
                 button {
                     margin: 5px;
                     background-color: $primary-color;
@@ -176,33 +174,30 @@ $breakpoint-xl: 1200px !default;
                     opacity: 0.7;
                     box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.3);
 
-
-                    &:focus{
+                    &:focus {
                         box-shadow: none;
                     }
-                    &:hover{
+                    &:hover {
                         opacity: 1;
                     }
                 }
-                .active{
+                .active {
                     opacity: 1;
                 }
-
             }
-            .content{
+            .content {
                 display: flex;
                 flex-direction: row;
                 width: 100%;
                 padding-bottom: 20px;
 
-
-                .buttons{
+                .buttons {
                     display: flex;
                     flex-basis: 50%;
                     flex-direction: column;
                     justify-content: center;
                     padding: 0 10px;
-                    button{
+                    button {
                         background-color: $primary-color;
                         border: none;
                         min-width: 90%;
@@ -211,21 +206,19 @@ $breakpoint-xl: 1200px !default;
                         box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.3);
                         font-size: 14px;
 
-
-                        &:focus{
+                        &:focus {
                             box-shadow: none;
                         }
-                        &:hover{
+                        &:hover {
                             opacity: 1;
                         }
-
                     }
-                    .active{
+                    .active {
                         opacity: 1;
                     }
                 }
 
-                .filter-one{
+                .filter-one {
                     display: flex;
                     margin: 0;
                     flex-basis: 50%;
@@ -233,90 +226,87 @@ $breakpoint-xl: 1200px !default;
                     justify-content: center;
                     align-items: center;
 
-                    .dark{
+                    .dark {
                         color: lighten($color: #000000, $amount: 0);
                     }
 
-                    .noise{
+                    .noise {
                         color: cadetblue;
                     }
 
-                    svg{
+                    svg {
                         margin: 0;
                         padding: 0 1px;
-                        font-size:28px;
+                        font-size: 28px;
                     }
-                    .line{
+                    .line {
                         display: flex;
                         margin: 0;
-                        
                     }
                 }
             }
         }
-        .addition{
+        .addition {
             .title {
                 display: flex;
                 flex-basis: auto;
                 justify-content: center;
                 align-items: center;
                 background-color: rgba(0, 0, 0, 0.3);
-                margin: 0 20px 10px 0 ;
+                margin: 0 20px 10px 0;
                 width: 100%;
-                p{
+                p {
                     margin: 0;
                     font-size: 16px;
-
                 }
 
-                .first{
+                .first {
                     display: flex;
                     flex-basis: 50%;
                     justify-content: flex-start;
                     padding-left: 5px;
                 }
 
-                .second{
+                .second {
                     display: flex;
                     flex-basis: 50%;
                     justify-content: flex-end;
                     padding-right: 5px;
                 }
             }
-
-            .range{
-              
-            }
-
-            .btn{
+            .btn {
                 display: flex;
                 flex-basis: 100%;
                 flex-direction: row;
                 justify-content: center;
 
-                button{
+                button {
                     background-color: $primary-color;
                     border: none;
                     min-width: 50%;
-                    margin:  5px;
+                    margin: 5px;
                     opacity: 0.7;
                     box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.3);
                     font-size: 14px;
 
-
-                    &:focus{
+                    &:focus {
                         box-shadow: none;
                     }
-                    &:hover{
+                    &:hover {
                         opacity: 1;
                     }
-
                 }
-                .active{
+                .active {
                     opacity: 1;
                 }
             }
         }
+    }
+    .rights {
+        margin: 0;
+        padding: 10px;
+        font-size: 10px;
+        text-align: center;
     }
 }
 
@@ -324,17 +314,12 @@ $breakpoint-xl: 1200px !default;
     display: inline-block !important;
 }
 
-// .pro-sidebar .pro-menu .pro-menu-item.pro-sub-menu .pro-inner-list-item .pro-inner-item:before {
-//     display: none;
-// }
-
 .pro-sidebar .pro-menu > ul > .pro-sub-menu > .pro-inner-list-item {
     background-color: transparent;
 }
 
-.pro-sidebar-layout{
-    overflow: hidden!important
-
+.pro-sidebar-layout {
+    overflow: hidden !important;
 }
 #pro-sidebar-layout::-webkit-scrollbar {
     display: none;
@@ -342,7 +327,7 @@ $breakpoint-xl: 1200px !default;
 
 #sidebar .pro-sidebar-content {
     overflow-y: scroll;
-    &::-webkit-scrollbar{
-        display: none!important;
+    &::-webkit-scrollbar {
+        display: none !important;
     }
 }

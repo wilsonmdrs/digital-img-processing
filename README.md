@@ -2,6 +2,7 @@
 
 Aplicação Web desenvolvida para a disciplina de processamento digital de imagens do curso de Ciência da Computação da Universidade do Sul de Santa Catarina (UNISUL).
 
+Para visualizar a aplicação basta accessar: https://digital-img-processing.herokuapp.com/ 
 ### Funcionalidades
 
 Esta Aplicação possibilita o carregamento de imagens para aplicação

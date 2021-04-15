@@ -1,3 +1,4 @@
+// Export Filters
 export {default as GreyScales} from './GreyScales'
 export {default as Negative} from './Negative'
 export {default as Threshold} from './Threshold'

@@ -121,6 +121,16 @@ body {
         display: flex;
         flex-basis: 80%;
 
+        .fullscreen {
+            flex-basis: 100% !important;
+            border:none;
+
+            .image-container{
+                width: 100% !important;
+                height: 100%  !important;
+            }
+        }
+
         #image-1 {
             display: flex;
             flex-basis: 50%;

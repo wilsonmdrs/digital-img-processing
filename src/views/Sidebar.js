@@ -1,9 +1,12 @@
 import React from 'react'
+
+// external components
 import { ProSidebar, SidebarHeader, Menu, MenuItem, SubMenu, SidebarContent, SidebarFooter } from 'react-pro-sidebar';
 import { Button, Input } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import sidebarImage from '../assets/images/bg-sidebar.jpeg'
+
+// internal components
 import {
     Negative,
     GreyScales
@@ -11,17 +14,22 @@ import {
 
 const Sidebar = (props) => {
 
+    // extracting properties
     const {
         // Variables
-        firstImage, secondImage, threshold, range, noiseReduction, addition,
+        firstImage, threshold, range, noiseReduction, addition,
         // Sets
-        onSetFirstImage, onSetSecondImage, onSetResultImage, onSetRange, onSetNoiseReduction, onSetAddition,
+       onSetResultImage, onSetRange, onSetNoiseReduction, onSetAddSub,
         // Methods
-        onApplyGreyScale, onChangeThresholdColorFull, onChangeThresholdGreyScale, onApplyAddition,
+        onApplyGreyScale, onChangeThresholdColorFul, onChangeThresholdGreyScale, onApplyAddition,
         onApplyNoiseReduction, onApplySubtraction,
         } = props
 
 
+    /**
+     * 
+     * @returns Icon (svg)
+     */
     const menuIcon = () => {
         return <FontAwesomeIcon icon="filter" />
     }
@@ -37,8 +45,8 @@ const Sidebar = (props) => {
                 </div>
             </SidebarHeader>
             <SidebarContent>
-
                 <Menu >
+                    {/* Grey Scale */}
                     <SubMenu title="Tons de Cinza" icon={menuIcon()}  >
                         <MenuItem onClick={() => onSetResultImage(GreyScales.aritmeticAverage(firstImage))} icon={<FontAwesomeIcon icon="adjust" />}>Média Aritmética</MenuItem>
                         <SubMenu title="Média Ponderada" icon={<FontAwesomeIcon icon="adjust" />}>
@@ -62,7 +70,11 @@ const Sidebar = (props) => {
                             </div>
                         </SubMenu>
                     </SubMenu>
+                    
+                    {/* Negative */}
                     <MenuItem onClick={() => onSetResultImage(Negative(firstImage))} icon={menuIcon()}>Negativa</MenuItem>
+                    
+                    {/* Threshold */}
                     <SubMenu title="Limiarização" icon={menuIcon()}  >
                         <div className="title">
                             <p>Em Imagem Colorida</p>
@@ -76,8 +88,8 @@ const Sidebar = (props) => {
                                 maxLength={255}
                                 max={255}
                                 value={threshold.colorful}
-                                onChange={(e) => onChangeThresholdColorFull(parseInt(e.target.value))}
-                                onClick={(e) => onChangeThresholdColorFull(parseInt(e.target.value))}
+                                onChange={(e) => onChangeThresholdColorFul(parseInt(e.target.value))}
+                                onClick={(e) => onChangeThresholdColorFul(parseInt(e.target.value))}
 
                             />
                             <p className="number">{threshold.colorful}</p>
@@ -100,6 +112,8 @@ const Sidebar = (props) => {
                             <p className="number">{threshold.greyScale}</p>
                         </div>
                     </SubMenu>
+                     
+                     {/* Noise Reduction */}
                      <SubMenu title="Redução de Ruidos" icon={menuIcon()} >
                         <div className="noise-reduction-item">
                             <div className="title">
@@ -159,17 +173,17 @@ const Sidebar = (props) => {
                                     Mediana
                                 </Button>
                             </div>
-
                         </div>
                         <div className="btn">
                             <Button onClick={() => onApplyNoiseReduction()}
                                 disabled={(noiseReduction.neighborhood.diagonal || noiseReduction.neighborhood.linear) ? false : true}
-
                             >
                                 Aplicar
                             </Button>
                         </div>
                     </SubMenu>
+                    
+                    {/* Addition and Subtraction */}
                     <SubMenu title="Adição/Subtração" icon={menuIcon()} >
                         <div className="addition">
                             <div className="title">
@@ -191,7 +205,7 @@ const Sidebar = (props) => {
                                     maxLength={100}
                                     max={100}
                                     value={addition.percent}
-                                    onChange={(e) => onSetAddition({ ...addition, percent: e.target.value })}
+                                    onChange={(e) => onSetAddSub({ ...addition, percent: e.target.value })}
 
                                 />
                                 <p className="number">{addition.percent}</p>
@@ -213,6 +227,7 @@ const Sidebar = (props) => {
                 </Menu>
             </SidebarContent>
             <SidebarFooter>
+                <p className="rights">Developed by Wilson Medeiros Jr.</p>
             </SidebarFooter>
         </ProSidebar>
     </div>

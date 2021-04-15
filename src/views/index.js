@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Content from './Content'
-import { Modal, ModalHeader, ModalBody } from 'reactstrap'
-import Histogram from '../components/Histogram'
 import Sidebar from './Sidebar'
 
 // Functions Filters
@@ -16,54 +14,78 @@ import {
 } from '../filters'
 
 
-const App = (props) => {
+const App = () => {
 
+    // First Image Context State Variable (Object Canvas Context)
     const [firstImage, setFirstImage] = useState(null)
-    const [histogram, setHistogram] = useState({first:{red:[],green:[],blue:[]}, second:{red:[],green:[],blue:[]}, result:{red:[],green:[],blue:[]}})
+    // Second Image Context State Variable (Object Canvas Context)
     const [secondImage, setSecondImage] = useState(null)
-    const [range, setRange] = useState({ red: 100, green: 0, blue: 0 })
+    // Resuklt Image Data State Variable (Image Data Array)
     const [resultImage, setResultImage] = useState(null)
+    // Histogram State Variable
+    const [histogram, setHistogram] = useState({ first: { red: [], green: [], blue: [] }, second: { red: [], green: [], blue: [] }, result: { red: [], green: [], blue: [] } })
+    //  GreyScale weighted Average State Variable
+    const [range, setRange] = useState({ red: 50, green: 25, blue: 25 })
+    //  Threshold Initial State Variable
     const [threshold, setThreshold] = useState({ colorful: 125, greyScale: 125 })
+    // Noise reduction Initial State Values
     const [noiseReduction, setNoiseReduction] = useState({ filter: "média", neighborhood: { diagonal: false, linear: false } })
-    const [addition, setAddition] = useState({ percent: 50, filter: "addition" })
-    const [modal, setModal] = useState(false)
-    
+    // Addition and Subtraction Initial State Values
+    const [addSub, setAddSub] = useState({ percent: 50, filter: "addition" })
 
+
+    // Update first Image State
     const onSetFirstImage = content => setFirstImage(content)
 
+    // Update Second Image State
     const onSetSecondImage = content => setSecondImage(content)
-    
+
+    // Update Result Image State
     const onSetResultImage = content => setResultImage(content)
 
+    // Update Range State
     const onSetRange = content => setRange(content)
 
-    const onSetAddition = content => setAddition(content)
+    // Update AddSub State
+    const onSetAddSub = content => setAddSub(content)
 
+    // Update Noise Reduction State
     const onSetNoiseReduction = content => setNoiseReduction(content)
 
+    // Update Threshold State
     const onSetThreshold = content => setThreshold(content)
 
-    const toggle = () => setModal(!modal)
-
-    const drawImage = (ctx, url_image, state) => {
+    /**
+     * Set the Selected Image inside Canvas Context
+     * @param {Object} ctx (Canvas Context)
+     * @param {String} url_image (Image Address)
+     * @param {String} imageState (Name of the State Variable)
+     */
+    const drawImage = (ctx, url_image, imageState) => {
+        // Create an Image Element
         const image = new Image()
+        // Setting the source address
         image.src = url_image
+        // drawing the image on canvas context after fully upload
         image.onload = () => {
             ctx.drawImage(image, 0, 0, ctx.canvas.width, ctx.canvas.height)
         }
-        if (state === "secondImage") {
+        // saving the context on image context
+        if (imageState === "secondImage") {
             setSecondImage(ctx)
         }
-        if (state === "firstImage") {
+        if (imageState === "firstImage") {
             setFirstImage(ctx)
         }
-        if (state === "result") {
+        if (imageState === "result") {
             setResultImage(ctx)
         }
     }
 
-    const onApplyGreyScale = (name, value) => {
-
+    /**
+     * Method to apply Grey Scale with Weighted Average
+     */
+    const onApplyGreyScale = () => {
         const checkPercent = range.red + range.green + range.blue
         if (checkPercent === 100) {
             let imageData = GreyScales.weightedAverage(firstImage, range)
@@ -73,7 +95,11 @@ const App = (props) => {
         }
     }
 
-    const onChangeThresholdColorFull = value => {
+    /**
+     * Method to apply Threshold on a Colorful image
+     * @param {Number} value 
+     */
+    const onChangeThresholdColorFul = value => {
         if (!!firstImage) {
             let imageData = firstImage.getImageData(0, 0, firstImage.canvas.width, firstImage.canvas.height)
             imageData = Threshold(imageData, value)
@@ -82,6 +108,10 @@ const App = (props) => {
         }
     }
 
+    /**
+     * Method to apply Threshold on a Grey Scale image
+     * @param {Number} value 
+     */
     const onChangeThresholdGreyScale = value => {
         if (!!firstImage) {
             let imageData = GreyScales.aritmeticAverage(firstImage)
@@ -91,6 +121,9 @@ const App = (props) => {
         }
     }
 
+    /**
+     * Method to apply Noise Reduction Filter
+     */
     const onApplyNoiseReduction = () => {
         let image
         if (!!noiseReduction.neighborhood.diagonal && !!noiseReduction.neighborhood.linear) {
@@ -125,83 +158,103 @@ const App = (props) => {
         setResultImage(image)
     }
 
+    /**
+     * Method to Apply Addition Filter
+     */
     const onApplyAddition = () => {
         if (!!firstImage && !!secondImage) {
-            const image = Addition(firstImage, secondImage, addition.percent)
+            const image = Addition(firstImage, secondImage, addSub.percent)
             setResultImage(image)
-            setAddition({ ...addition, filter: "addition" })
+            setAddSub({ ...addSub, filter: "addition" })
         } else {
             alert("selecione duas imagens para aplicar esse Filtro")
         }
     }
 
+    /**
+     * Method to Apply Subtraction Filter
+     */
     const onApplySubtraction = () => {
         if (!!firstImage && !!secondImage) {
-            const image = Subtraction(firstImage, secondImage, addition.percent)
+            const image = Subtraction(firstImage, secondImage, addSub.percent)
             setResultImage(image)
-            setAddition({ ...addition, filter: "subtraction" })
+            setAddSub({ ...addSub, filter: "subtraction" })
         } else {
             alert("selecione duas imagens para aplicar esse Filtro")
         }
     }
+
 
     useEffect(() => {
         if (!!secondImage && !!firstImage) {
-            if (addition.filter === "addition") {
+            if (addSub.filter === "addition") {
                 onApplyAddition()
             } else {
                 onApplySubtraction()
             }
         }
-    }, [addition.percent])
+        // eslint-disable-next-line
+    }, [addSub.percent])
 
     const resultContext = () => {
         if (!!resultImage) {
             const context = document.getElementById("result").getContext('2d')
             return context
-        }else {
+        } else {
             return null
         }
     }
 
-    useEffect(() => {
-        if (!!resultImage) {
-            setHistogram({...histogram, result:HistogramChart.RGB(resultContext(resultImage))})
-        }
-    },[resultImage])
-
+     /**
+     * Modify Histogram State when the First Image change
+     */
     useEffect(() => {
         if (!!firstImage) {
-            setHistogram({...histogram, first:HistogramChart.RGB(firstImage)})
+            setHistogram({ ...histogram, first: HistogramChart.RGB(firstImage) })
         }
-    },[firstImage])
+        // eslint-disable-next-line
+    }, [firstImage])
 
+     /**
+     * Modify Histogram State when the Second Image change
+     */
     useEffect(() => {
         if (!!secondImage) {
-            setHistogram({...histogram, second:HistogramChart.RGB(secondImage)})
+            setHistogram({ ...histogram, second: HistogramChart.RGB(secondImage) })
         }
-    },[secondImage])
+        // eslint-disable-next-line
+    }, [secondImage])
+
+    /**
+     * Modify Histogram State when the result Image change
+     */
+     useEffect(() => {
+        if (!!resultImage) {
+            setHistogram({ ...histogram, result: HistogramChart.RGB(resultContext(resultImage)) })
+        }
+        // eslint-disable-next-line
+    }, [resultImage])
 
     return (
         <div id="container">
-           <Sidebar 
+            <Sidebar
                 // Methods
-                onChangeThresholdColorFull={onChangeThresholdColorFull}
+                onChangeThresholdColorFul={onChangeThresholdColorFul}
                 onChangeThresholdGreyScale={onChangeThresholdGreyScale}
                 onApplyGreyScale={onApplyGreyScale}
                 onApplyNoiseReduction={onApplyNoiseReduction}
                 onApplyAddition={onApplyAddition}
                 onApplySubtraction={onApplySubtraction}
-                
+                // Alter State
                 onSetFirstImage={onSetFirstImage}
                 onSetSecondImage={onSetSecondImage}
                 onSetResultImage={onSetResultImage}
                 onSetRange={onSetRange}
-                onSetAddition={onSetAddition}
+                onSetAddSub={onSetAddSub}
                 onSetNoiseReduction={onSetNoiseReduction}
                 onSetThreshold={onSetThreshold}
-                // Variables
-                addition={addition}
+                // State Variables
+                addition={addSub}
                 range={range}
                 threshold={threshold}
                 noiseReduction={noiseReduction}
@@ -209,8 +262,7 @@ const App = (props) => {
                 secondImage={secondImage}
                 resultImage={resultImage}
 
-           />
-           
+            />
             <Content
                 firstImage={firstImage}
                 secondImage={secondImage}
@@ -219,41 +271,9 @@ const App = (props) => {
                 onSetFirstImage={setFirstImage}
                 onSetSecondImage={setSecondImage}
                 onSetResult={setResultImage}
-                toggle={toggle}
                 resultContext={resultContext}
                 histogram={histogram}
             />
-            <Modal isOpen={modal} toggle={toggle} className="modal-histogram">
-                <ModalHeader toggle={toggle}>Histograma</ModalHeader>
-                <ModalBody>
-                    {!!firstImage && (
-                        <div className="chart">
-                            <p>Imagem 1</p>
-                            <Histogram context={firstImage}  type="rgb" />
-                        </div>
-                    )}
-                    {!!secondImage && (
-                        <div  className="chart">
-                            <p>Imagem 2</p>
-                            <Histogram context={secondImage}  type="rgb" />
-                        </div>
-
-                    )}
-                    {!!resultImage && (
-                        <div  className="chart">
-                            <p>Imagem 3</p>
-                            <Histogram context={resultContext()} type="rgb" />
-                        </div>
-                    )}
-                    {(!firstImage && !secondImage && !resultImage) && (
-                        <div>
-                            <p>
-                                Carregue pelo menos uma Imagem para ser Possível a Visualização do Histograma
-                            </p>
-                        </div>
-                    ) }
-                </ModalBody>
-            </Modal>
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import NoiseReduction from './NoiseReduction'
+import Functions from './Functions'
 
 
 const Subtraction = (firstImage, secondImage, percent) => {
@@ -33,9 +33,9 @@ const Subtraction = (firstImage, secondImage, percent) => {
     for (let x = 0; x <= result.width; x++) {
         for (let y = 0; y <= result.height; y++) {
        
-        i1 = data1.width >= x && data1.height >= y? NoiseReduction.getColorIndicesForCoord(x, y,data1.width) : 0
-        i2 = NoiseReduction.getColorIndicesForCoord(x, y,data2.width) 
-        i3 = NoiseReduction.getColorIndicesForCoord(x, y,result.width)
+        i1 = data1.width >= x && data1.height >= y? Functions.getColorIndicesForCoord(x, y,data1.width) : 0
+        i2 = Functions.getColorIndicesForCoord(x, y,data2.width) 
+        i3 = Functions.getColorIndicesForCoord(x, y,result.width)
         result.data[i3] = (((data1.width > x && data1.height > y ) ? (data1.data[i1] * ((100 - percent) / 100)) : 0 ) ) - (((data2.width > x && data2.height > y)  ? (data2.data[i2] * (percent / 100)) : 0));
         result.data[i3 + 1] = (((data1.width > x && data1.height > y)  ? (data1.data[i1 + 1] * ((100 - percent)) / 100) : 0)  ) - (((data2.width > x && data2.height > y ) ? (data2.data[i2 + 1]* (percent / 100)): 0) )
         result.data[i3 + 2] = (((data1.width > x && data1.height > y)  ? (data1.data[i1 + 2] * ((100 - percent)) / 100) : 0) ) - (((data2.width > x && data2.height > y ) ? ( data2.data[i2 + 1] * (percent / 100)) : 0) )
