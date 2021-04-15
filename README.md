@@ -8,14 +8,18 @@ Para visualizar a aplicação basta accessar: https://digital-img-processing.her
 Esta Aplicação possibilita o carregamento de imagens para aplicação
 de filtros através da manipulação direta dos pixesls, utilizando conceitos
 de processamento digital de imagens, permitindo ao final da manipulação do filtro
-fazer download da imagem.
+fazer o download da imagem.
 
-####Filtros
+#### Filtros
  - Escala de Cinza (média artmética e média pondera)
  - Negativa
+ - Redução de Ruidos
  - Limiarização
  - Adição
  - Subtração
+
+ #### Outras Funcionalidades
+ - Histograma de Imagem por Canal de Cor (RGB)
 
 ### Instalação
 
