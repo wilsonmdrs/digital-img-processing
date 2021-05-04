@@ -9,7 +9,10 @@ import {
     NoiseReduction,
     Addition,
     Subtraction,
-    HistogramChart
+    HistogramChart,
+    Equalization,
+    Simulator,
+    FirstExam
 
 } from '../filters'
 
@@ -32,7 +35,9 @@ const App = () => {
     const [noiseReduction, setNoiseReduction] = useState({ filter: "média", neighborhood: { diagonal: false, linear: false } })
     // Addition and Subtraction Initial State Values
     const [addSub, setAddSub] = useState({ percent: 50, filter: "addition" })
-
+    // Estado Genérico
+    const [state, setState] = useState(null)
+    const [selectedArea, setSelectedArea] = useState(null)
 
     // Update first Image State
     const onSetFirstImage = content => setFirstImage(content)
@@ -55,6 +60,9 @@ const App = () => {
     // Update Threshold State
     const onSetThreshold = content => setThreshold(content)
 
+    const onSetSelectedArea = (selected) => {
+        setSelectedArea(selected)
+    }
     /**
      * Set the Selected Image inside Canvas Context
      * @param {Object} ctx (Canvas Context)
@@ -205,6 +213,51 @@ const App = () => {
         }
     }
 
+    const onSetEqualization = (type) => {
+        if (!!firstImage) {
+            let imageData
+            if (type === "valid") {
+                imageData = Equalization.validChanels(firstImage)
+            }else {
+                imageData = Equalization.allChanels(firstImage)
+            }
+            setResultImage(imageData)
+        }
+    }
+
+    const onApplyInverter = (quandrantes) => {
+        if (!!firstImage) {
+            console.log(quandrantes)
+            const imageData = Simulator.Inverter(firstImage, quandrantes)
+            setResultImage(imageData)
+        }
+    }
+
+    const onApplyColumns = (columns) => {
+        if (!!firstImage) {
+            const imageData = FirstExam.first(firstImage, columns)
+            setResultImage(imageData)
+        }
+    }
+    
+    const onAppyInvertSelection = () => {
+        if (!!firstImage && !!selectedArea) {
+            const imageData = FirstExam.second(firstImage, selectedArea)
+            setResultImage(imageData)
+        }
+    }
+    
+    const onCheckGeometry = () => {
+        if (!!firstImage) {
+            const filled = FirstExam.third(firstImage)
+            if (filled) {
+                alert("O quadrado está Preenchido")
+            }else {
+                alert("O quadrado não está Preenchido")
+            }
+        }
+    }
+
      /**
      * Modify Histogram State when the First Image change
      */
@@ -235,6 +288,7 @@ const App = () => {
         // eslint-disable-next-line
     }, [resultImage])
 
+
     return (
         <div id="container">
             <Sidebar
@@ -245,6 +299,10 @@ const App = () => {
                 onApplyNoiseReduction={onApplyNoiseReduction}
                 onApplyAddition={onApplyAddition}
                 onApplySubtraction={onApplySubtraction}
+                onApplyInverter={onApplyInverter}
+                onApplyColumns={onApplyColumns}
+                onApplyInvertSelection={onAppyInvertSelection}
+                onCheckGeometry={onCheckGeometry}
                 // Alter State
                 onSetFirstImage={onSetFirstImage}
                 onSetSecondImage={onSetSecondImage}
@@ -253,6 +311,7 @@ const App = () => {
                 onSetAddSub={onSetAddSub}
                 onSetNoiseReduction={onSetNoiseReduction}
                 onSetThreshold={onSetThreshold}
+                onSetEqualization={onSetEqualization}
                 // State Variables
                 addition={addSub}
                 range={range}
@@ -261,6 +320,7 @@ const App = () => {
                 firstImage={firstImage}
                 secondImage={secondImage}
                 resultImage={resultImage}
+                state={state}
 
             />
             <Content
@@ -273,6 +333,7 @@ const App = () => {
                 onSetResult={setResultImage}
                 resultContext={resultContext}
                 histogram={histogram}
+                onSetSelectedArea={onSetSelectedArea}
             />
         </div>
     )

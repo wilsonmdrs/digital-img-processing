@@ -68,6 +68,8 @@ const Content = (props) => {
                         data={props.histogram.first}
                         onSetFullScreen={setFullScreen}
                         fullScreen={fullScreen.all}
+                        onSetFirstImage={props.onSetFirstImage}
+                        onSetSelectedArea={props.onSetSelectedArea}
                         firstImage
                     />
                     )}
@@ -85,6 +87,7 @@ const Content = (props) => {
                         data={props.histogram.second}
                         onSetFullScreen={setFullScreen}
                         fullScreen={fullScreen.all}
+                        onSetSelectedArea={props.onSetSelectedArea}
                         secondImage
                     />
                     )}

@@ -8,7 +8,9 @@ const ImageView = (props) => {
 
     // variable to set the view
     const [view, setView] = useState({ image: true, histogram: false })
-
+    const [selectedArea, setSelectedArea] = useState(null)
+    const [historic, setHistoric] = useState(null)
+    
     /**
      * This Method receive an event Object on the current mouse position
      * to get the Image Color (RGB) 
@@ -54,7 +56,23 @@ const ImageView = (props) => {
             const url_image = URL.createObjectURL(e.target.files[0])
             props.setResult(null)
             props.setUrlImage(url_image)
+            // console.log(newImageData(url_image))    
+            // setHistoric()
         }
+    }
+
+    const newImageData = (urlImage) => {
+        let newImage = new Image()
+        newImage.src = urlImage
+        let canvas = document.createElement("CANVAS");
+        canvas.width = newImage.width
+        canvas.height = newImage.height
+        const context = canvas.getContext('2d')
+        newImage.onload = () => {
+            context.drawImage(newImage, 0,0,newImage.width, newImage.height)
+        }
+        const imageData = context.getImageData(0,0, newImage.width, newImage.height).data
+        return (imageData)
     }
 
     // const zoom = (canvas, ctx, x, y) => {
@@ -111,6 +129,10 @@ const ImageView = (props) => {
         }
     }
 
+    // const onSetSelectedArea = (selected) => {
+    //     setSelectedArea(imageData)
+    // }
+
     return (
         <div id="image-view">
             <div className="header">
@@ -131,6 +153,13 @@ const ImageView = (props) => {
                     ): (
                         <FontAwesomeIcon className="icon" icon="compress-arrows-alt" onClick={(e) => onDisableFullScreen(e)} />
                     )}
+                    {props.firstImage && (
+                        <>
+                            <FontAwesomeIcon className="icon" icon="cut" onClick={(e) => onDisableFullScreen(e)} />
+                            <FontAwesomeIcon className="icon" icon="undo" onClick={(e) => onDisableFullScreen(e)} />
+                            
+                        </>
+                    )}
                 </Label>
             </div>
             {/* <div className="pixel-zoom">
@@ -149,6 +178,8 @@ const ImageView = (props) => {
                         drawImage={props.drawImage}
                         onGetPixel={onGetPixel}
                         resultImage={props.resultImage}
+                        onSetSelectedArea={props.onSetSelectedArea}
+                        image={historic}
                     />
                 )}
 

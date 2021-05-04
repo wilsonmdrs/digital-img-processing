@@ -2,12 +2,25 @@ import React, { useEffect, useRef, useState } from 'react'
 
 const Canvas = props => {
 
-    const { drawImage, urlImage, resultImage, result, onGetPixel, setContext, firstImage, secondImage, ...rest } = props
+    const { drawImage, urlImage, resultImage, image, result, onGetPixel, setContext, firstImage, secondImage,
+        onSetSelectedArea, onSetFirstImage, ...rest } = props
     const canvasRef = useRef(null)
     const [imageObj, setImageObj] = useState(null)
     const [drag, setDrag] = useState(false)
     const [rect, setRect] = useState({})
     
+    useEffect(() => {
+        if (!!image) {
+            const canvas = canvasRef.current
+            canvas.width = image.width
+            canvas.height = image.height
+            const context = canvas.getContext('2d')
+            context.putImageData(image, 0, 0,)
+        }
+    // eslint-disable-next-line
+    }, [image] )
+        
+
     useEffect(() => {
         if (!!resultImage) {
             const canvas = canvasRef.current
@@ -48,7 +61,26 @@ const Canvas = props => {
         setDrag(true)
     }
 
-    const mouseUp = () => {
+    const onReturn = () => {
+
+    }
+
+    const onCutImage = (e) => {
+        const canvas = canvasRef.current
+        const ctx = e.target.getContext('2d')
+        const imageData = ctx.getImageData(rect.startX, rect.startY, rect.width, rect.height)
+        console.log('imageData', imageData)
+        canvas.width = rect.width
+        canvas.height = rect.height
+        ctx.putImageData(imageData, 0,0)
+    }
+
+    const mouseUp = (e) => {
+        let width = e.nativeEvent.offsetX - rect.startX;
+        let height = e.nativeEvent.offsetY - rect.startY;
+        const ctx = e.target.getContext('2d')
+        const imageData = ctx.getImageData(rect.startX, rect.startY, width, height)
+        onSetSelectedArea({imageData, startX:rect.startX, startY:rect.startY, width, height, endX:(rect.startX + width), endY:(rect.startY + height)})
         setDrag(false)
     }
 
@@ -60,8 +92,9 @@ const Canvas = props => {
             ctx.drawImage(imageObj, 0, 0);
             let w = e.nativeEvent.offsetX - rect.startX;
             let h = e.nativeEvent.offsetY - rect.startY;
+            setRect({...rect, width:w, height:h})
             ctx.strokeStyle = 'black';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 1;
             ctx.strokeRect(rect.startX, rect.startY, w, h);
         }
     }
@@ -69,8 +102,8 @@ const Canvas = props => {
     return <canvas id={!!result ? "result" : "myCanvas"}
         ref={canvasRef} {...rest}
         onMouseMove={event => mouseMove(event)}
-        onMouseDown={e => mouseDown(e)}
-        onMouseUp={() => mouseUp()}
+        onMouseDown={event => mouseDown(event)}
+        onMouseUp={event => mouseUp(event)}
     />
 }
 export default Canvas
